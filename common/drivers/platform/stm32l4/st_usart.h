@@ -1,61 +1,57 @@
 /**
- * @brief This file is implementing hardware specific functions defined in the generic USART class.
- */
-
+* @brief Gia's Prototyping UART based on the general class UART by LBR
+*/
 #pragma once
+
 
 #include "stm32l476xx.h"
 #include "usart.h"
+
 
 namespace LBR
 {
 namespace Stml4
 {
-class StUsart : public Usart
-{
-private:
-    USART_TypeDef* base_addr;
-    uint16_t uartdiv;
+class StUsart : public Usart {
+    public:
+        StUsart(USART_TypeDef* base_addr, uint32_t clk_freq,
+                uint32_t baud_rate);
+       
+        /**
+        * @brief Receive data from serial input at rx pin
+        * @param byte refernce to store received byte
+        * @return true if data is received
+         */
+        bool receive(uint8_t& byte) override;
 
-public:
-    /**
-     * @brief Paramterized contructor which initilazes important values for specific USART object.
-     * 
-     * @param sys_clck The specific system clock frequency of hardware.
-     * @param baud_rate The chosen baud rate to send and recieve data on a serial monitor.
-     */
+        /**
+        * @brief Send data throuhg serial tx pin
+        * @param txbuf an uint8_t std:array data to be sent
+        * @param size variable of size_t specifying the length of message
+        */
+        bool send(std::span<const uint8_t> txbuf) override;
 
-    StUsart(USART_TypeDef* base_addr, uint32_t sys_clck, uint32_t baud_rate);
 
-    /**
-     * @brief sends data to serial output.
-     * 
-     * @param txbuf An uint8_t std::array data to be sent
-     * @param size Variable of size_t type which specifies the size of message.
-     */
-    bool send(std::span<const uint8_t> txbuf) override;
+        /**
+        * @brief Init UART and its associated pins
+        * @return True if successful initilization, False otherwise
+         */
+        bool init();
 
-    /**
-     * @brief Recieves data from serial input.
-     * 
-     * @param byte Reference to store received byte
-     * @return True if byte was received, false if no data available
-     */
-    bool receive(uint8_t& byte) override;
+        /**
+        * @brief Get base address of UART object
+        * @return pointer to USART_Typedef address
+         */
+        USART_TypeDef* get_addr();
+       
 
-    /**
-     * @brief Initializes the USART and associated Rx and Tx pins.
-     * 
-     * @return True successful initializaiton. False otherwise.
-     */
-    bool init();
 
-    /**
-     * @brief Get the base_addr of the UART object
-     * 
-     * @return USART_TypeDef* 
-     */
-    USART_TypeDef* get_addr();
+    private:
+        USART_TypeDef* _base_addr;
+        uint16_t uartdiv;
+
+
 };
-}  // namespace Stml4
-}  // namespace LBR
+
+} //Stml4
+} //Gia
