@@ -2,8 +2,8 @@
 
 using namespace LBR;
 
-std::array<uint8_t, 17> txb{"i <3 embedded\r\n"};
-uint8_t rxb;
+std::array<uint8_t, 17> txb{"Hello, Gia\r\n"};
+uint8_t rx_byte;
 
 int main(int argc, char** argv)
 {
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
         hw.usart.send(txb);
 
         // Busy wait
-        for (volatile uint32_t i = 0; i < 1000000; i++)
+        for (volatile uint32_t i = 0; i < 500000; i++)
         {
         }
     }
